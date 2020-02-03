@@ -28,7 +28,6 @@ jobs:
       - run:
           name: JFrogCLI config
           command: |
-       #    /./jfrog rt config --user=$user --password=$password --url="https://"$jfqdn"/artifactory" $jid
             /./jfrog rt config --user=$user --password=$password --url="http://"$jfqdn"/artifactory" $jid
             /./jfrog rt ping
       - run:
