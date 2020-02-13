@@ -28,8 +28,8 @@ jobs:
       - run:
           name: JFrogCLI config
           command: |
-            /./jfrog rt config --user=$user --password=$password --url="https://"$jfqdn"/artifactory" $jid
-            /./jfrog rt ping
+            /jfrog rt config --user=$user --password=$password --url="https://"$jfqdn"/artifactory" $jid
+            /jfrog rt ping
       - run:
           name: JFrogCLI artifact publish
           command: |
