@@ -1,5 +1,5 @@
 From nginx:1.12
-RUN apt-get update && apt-get install -y curl
+#RUN apt-get update && apt-get install -y curl
 
 ## 20200227 disable
 #From ubuntu:18.04
