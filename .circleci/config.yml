@@ -78,6 +78,7 @@ jobs:
       - run:
           name: test
           command: |
+            sudo kubectl run --restart=Never $CIRCLE_BUILD_NUM --image= 
             sudo kubectl get pods -n nohara -o wide
 
 #            gcloud config configurations activate $account
