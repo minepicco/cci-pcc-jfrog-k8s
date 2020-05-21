@@ -67,11 +67,13 @@ jobs:
           name: Configure gcloud cli
           command: |
             echo $key>key.json
-            gcloud config set project $project
             gcloud auth activate-service-account --key-file=key.json
-            gcloud config set project my_project $project
-            gcloud config set compute/region $region
             sudo gcloud beta container clusters get-credentials $cluster --region $region --project $project
+
+#            gcloud config set project $project
+#            gcloud config set project my_project $project
+#            gcloud config set compute/region $region
+
 
       - run:
           name: test
