@@ -68,11 +68,17 @@ jobs:
           command: |
             echo $key>key.json
             gcloud config set project $project
-            gcloud config configurations activate $account
             gcloud auth activate-service-account --key-file=key.json
             gcloud config set project my_project $project
             gcloud config set compute/region $region
-#            gcloud beta container clusters get-credentials $cluster --region $region --project $project
+            sudo gcloud beta container clusters get-credentials $cluster --region $region --project $project
+
+      - run:
+          name: test
+          command: |
+            sudo kubectl get pods -n nohara -o wide
+
+#            gcloud config configurations activate $account
 #      - run:
 #          name: auth and push
 #          command: |
