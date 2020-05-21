@@ -35,14 +35,14 @@ jobs:
       - run:
           name: JFrogCLI config
           command: |
-            ./jfrog rt config --user=$juser --password=$jpass --url="http://artifactory.nohara/artifactory" $jid
-            ./jfrog rt ping
-            ./jfrog rt docker-push "artifactory.nohara/docker-local/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM $repo --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
-            ./jfrog rt bce $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
-            ./jfrog rt bag $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
-            ./jfrog rt bp $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
-            ./jfrog rt bs $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
-            ./jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $repo
+            /jfrog rt config --user=$juser --password=$jpass --url="http://artifactory.nohara/artifactory" $jid
+            /jfrog rt ping
+            /jfrog rt docker-push "artifactory.nohara/docker-local/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM $repo --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
+            /jfrog rt bce $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
+            /jfrog rt bag $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
+            /jfrog rt bp $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
+            /jfrog rt bs $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
+            /jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $repo
 #      - run:
 #          name: auth and push
 #          command: |
