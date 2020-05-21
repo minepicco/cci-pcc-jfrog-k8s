@@ -1,17 +1,17 @@
 version: 2
-#jobs:
-#  build:
-#    docker:
-#      - image: minepicco/cc-build-image:24
 jobs:
   build:
-    executor: machine
-    environment:
-      repo: "docker-local"
+    docker:
+      - image: minepicco/cc-build-image:24
+#jobs:
+#  build:
+#    executor: machine
+#    environment:
+#      repo: "docker-local"
       
     steps:
       - checkout
-#      - setup_remote_docker
+      - setup_remote_docker
       
       - run:
           name: Prepare Environment
@@ -30,27 +30,18 @@ jobs:
             echo $CIRCLE_PROJECT_REPONAME
             docker build --tag "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM .
 
-      #- run:
-      #    name: Login and Publish
-      #    command: |
-      #      docker login $repo  -u $user -p $password
-      #      docker push "docker."$jfqdn"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM
-
-      #- run:
-      #    name: Request for scan build
-      #    command: |
-      #      echo '{"artifactoryId": "'$jid'","buildName": "'$CIRCLE_PROJECT_REPONAME'","buildNumber": "'$CIRCLE_BUILD_NUM'"}' > temp.json
-      #      curl -X POST -u $user":"$password -H "Content-Type: application/json" $xurl"/api/v1/scanBuild" -d @temp.json 
       - run:
           name: JFrogCLI config
           command: |
             ./jfrog rt config --user=$juser --password=$jpass --url="http://artifactory.nohara/artifactory" $jid
             ./jfrog rt ping
-      - run:
-          name: auth and push
-          command: |
-            docker login http://artifactory.nohara -u $juser -p $jpass
-            docker push "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM
+
+#      - run:
+#          name: auth and push
+#          command: |
+#            docker login http://artifactory.nohara -u $juser -p $jpass
+#            docker push "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM
+            
       - run:
           name: JFrogCLI artifact publish
           command: |
