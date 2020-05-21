@@ -67,7 +67,7 @@ jobs:
           name: Configure gcloud cli
           command: |
             echo $key>key.json
-            cloud config set project $project
+            gcloud config set project $project
             gcloud config configurations activate $account
             gcloud auth activate-service-account --key-file=key.json
             gcloud config set project my_project $project
