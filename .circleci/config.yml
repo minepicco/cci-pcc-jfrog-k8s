@@ -49,7 +49,7 @@ jobs:
       - run:
           name: auth and push
           command: |
-            docker login http://artifactory.nohara -u $juser -p jpass
+            docker login http://artifactory.nohara -u $juser -p $jpass
             docker push "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM
       - run:
           name: JFrogCLI artifact publish
