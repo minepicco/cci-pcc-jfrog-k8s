@@ -16,13 +16,15 @@ jobs:
       - run:
           name: Prepare Environment
           command: |
-            sudo apt-get update && sudo apt-get install -y python wget curl jq
-            curl -fL https://getcli.jfrog.io | sh
-            echo '{ "insecure-registries" : ["artifactory.nohara"] }' > daemon.json
-            sudo mv daemon.json /etc/docker/
-            sudo cat /etc/hosts > hosts && echo $addr" artifactory.nohara" >> hosts
-            sudo mv hosts /etc/
-            sudo service docker restart
+            echo $addr" artifactory.nohara" >> /etc/hosts
+#            sudo apt-get update && sudo apt-get install -y python wget curl jq
+#            curl -fL https://getcli.jfrog.io | sh
+#            echo '{ "insecure-registries" : ["artifactory.nohara"] }' > daemon.json
+#            sudo mv daemon.json /etc/docker/
+#            sudo cat /etc/hosts > hosts && echo $addr" artifactory.nohara" >> hosts
+#            sudo mv hosts /etc/
+#            sudo service docker restart
+            
           
       - run:
           name: Build Image
