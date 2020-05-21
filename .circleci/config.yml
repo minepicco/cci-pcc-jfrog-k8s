@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: minepicco/cc-build-image:latest
+      - image: minepicco/cc-build-image:24
     environment:
       repo: "docker-local"
       
