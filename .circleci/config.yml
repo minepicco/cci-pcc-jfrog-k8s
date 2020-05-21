@@ -31,7 +31,7 @@ jobs:
       - run:
           name: JFrogCLI config
           command: |
-            /jfrog rt config --user=$juser --password=$jpass --url="https://artifactory.nohara/artifactory" $jid
+            /jfrog rt config --user=$juser --password=$jpass --url="http://artifactory.nohara/artifactory" $jid
             /jfrog rt ping
       - run:
           name: auth and push
