@@ -30,7 +30,7 @@ jobs:
           name: Build Image
           command: |
             echo $CIRCLE_PROJECT_REPONAME
-            docker build --tag "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM .
+            docker build --tag "artifactory.nohara/docker-local/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM .
 
       - run:
           name: JFrogCLI config
