@@ -54,7 +54,7 @@ jobs:
       - run:
           name: JFrogCLI artifact publish
           command: |
-            ./jfrog rt docker-push "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM build --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
+            ./jfrog rt docker-push "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM $repo --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
             ./jfrog rt bce $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             ./jfrog rt bag $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             ./jfrog rt bp $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
