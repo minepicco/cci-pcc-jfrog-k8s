@@ -18,7 +18,8 @@ jobs:
           command: |
             sudo apt-get update && sudo apt-get install -y python wget curl jq
             curl -fL https://getcli.jfrog.io | sh
-            sudo echo '{ "insecure-registries" : ["artifactory.nohara"] }' >> /etc/docker/daemon.json
+            echo '{ "insecure-registries" : ["artifactory.nohara"] }' > daemon.json
+            sudo mv daemon.json /etc/docker/
           
       - run:
           name: Build Image
