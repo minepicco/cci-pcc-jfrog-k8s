@@ -43,8 +43,8 @@ jobs:
       - run:
           name: JFrogCLI config
           command: |
-            /jfrog rt config --user=$juser --password=$jpass --url="http://artifactory.nohara/artifactory" $jid
-            /jfrog rt ping
+            ./jfrog rt config --user=$juser --password=$jpass --url="http://artifactory.nohara/artifactory" $jid
+            ./jfrog rt ping
       - run:
           name: auth and push
           command: |
@@ -53,9 +53,9 @@ jobs:
       - run:
           name: JFrogCLI artifact publish
           command: |
-            /jfrog rt bce $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
-            /jfrog rt bag $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
-            /jfrog rt bp $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
-            /jfrog rt bs $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
-            /jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM docker
+            ./jfrog rt bce $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
+            ./jfrog rt bag $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
+            ./jfrog rt bp $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
+            ./jfrog rt bs $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
+            ./jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM docker
            
