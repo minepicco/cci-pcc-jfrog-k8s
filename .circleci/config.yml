@@ -42,9 +42,9 @@ jobs:
 #            docker login http://artifactory.nohara -u $juser -p $jpass
 #            docker push "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM
             
-      - run:
-          name: JFrogCLI artifact publish
-          command: |
+#      - run:
+#          name: JFrogCLI artifact publish
+#          command: |
             ./jfrog rt docker-push "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM $repo --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
             ./jfrog rt bce $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             ./jfrog rt bag $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
