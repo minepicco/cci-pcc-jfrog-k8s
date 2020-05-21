@@ -20,11 +20,12 @@ jobs:
             curl -fL https://getcli.jfrog.io | sh
             echo '{ "insecure-registries" : ["artifactory.nohara"] }' > daemon.json
             sudo mv daemon.json /etc/docker/
+            sudo cat /etc/hosts > hosts && echo $addr" artifactory.nohara" >> hosts
+            sudo mv hosts /etc/
           
       - run:
           name: Build Image
           command: |
-            sudo echo $addr"    artifactory.nohara" >> /etc/hosts
             echo $CIRCLE_PROJECT_REPONAME
             docker build --tag "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM .
 
