@@ -16,15 +16,33 @@ jobs:
 #      - setup_remote_docker
       
       - run:
-          name: Prepare Environment
+          name: Prepare Environment -- Install JFrog CLI
           command: |
             sudo apt-get update && sudo apt-get install -y python wget curl jq
             curl -fL https://getcli.jfrog.io | sh
+      - run:
+          name: Prepare Environment -- Add insecure-registries
+          command: |
             echo '{ "insecure-registries" : ["artifactory.nohara"] }' > daemon.json
             sudo mv daemon.json /etc/docker/
             sudo cat /etc/hosts > hosts && echo $addr" artifactory.nohara" >> hosts
             sudo mv hosts /etc/
             sudo service docker restart
+      - run:
+          name: Prepare Environment -- Install gcloud CLI
+          command: |
+            echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+            sudo apt-get install -y apt-transport-https ca-certificates gnupg
+            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+            sudo apt-get update && sudo apt-get install -y google-cloud-sdk
+      - run:
+          name: Prepare Environment -- Install kubectl
+          command: |
+            curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+            echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+            sudo apt-get update
+            sudo apt-get install -y kubectl
+
 #            echo $addr" artifactory.nohara" >> /etc/hosts
                      
       - run:
@@ -45,8 +63,14 @@ jobs:
             ./jfrog rt bag $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             ./jfrog rt bp $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             ./jfrog rt bs $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
+      - run:
+          name: JFrogCLI promote image to production
+          command: |
             ./jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $prod_repo
-
+#      - run:
+#          name: Configure gcloud cli
+#          command: |
+#            gcloud init
 #      - run:
 #          name: auth and push
 #          command: |
