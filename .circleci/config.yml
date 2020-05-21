@@ -1,13 +1,14 @@
 version: 2
-jobs:
-  build:
-    docker:
-      - image: minepicco/cc-build-image:24
 #jobs:
 #  build:
-#    executor: machine
-#    environment:
-#      repo: "docker-local"
+#    docker:
+#      - image: minepicco/cc-build-image:24
+jobs:
+  build:
+    executor: machine
+    environment:
+      repo: "docker-local"
+      imagename: "artifactory.nohara/docker-local"
       
     steps:
       - checkout
@@ -16,16 +17,15 @@ jobs:
       - run:
           name: Prepare Environment
           command: |
-            echo $addr" artifactory.nohara" >> /etc/hosts
-#            sudo apt-get update && sudo apt-get install -y python wget curl jq
-#            curl -fL https://getcli.jfrog.io | sh
-#            echo '{ "insecure-registries" : ["artifactory.nohara"] }' > daemon.json
-#            sudo mv daemon.json /etc/docker/
-#            sudo cat /etc/hosts > hosts && echo $addr" artifactory.nohara" >> hosts
-#            sudo mv hosts /etc/
-#            sudo service docker restart
-            
-          
+            sudo apt-get update && sudo apt-get install -y python wget curl jq
+            curl -fL https://getcli.jfrog.io | sh
+            echo '{ "insecure-registries" : ["artifactory.nohara"] }' > daemon.json
+            sudo mv daemon.json /etc/docker/
+            sudo cat /etc/hosts > hosts && echo $addr" artifactory.nohara" >> hosts
+            sudo mv hosts /etc/
+            sudo service docker restart
+#            echo $addr" artifactory.nohara" >> /etc/hosts
+                     
       - run:
           name: Build Image
           command: |
@@ -37,7 +37,7 @@ jobs:
           command: |
             /jfrog rt config --user=$juser --password=$jpass --url="http://artifactory.nohara/artifactory" $jid
             /jfrog rt ping
-            /jfrog rt docker-push "artifactory.nohara/docker-local/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM docker-local --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
+            /jfrog rt docker-push $imagename"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM $repo --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
             /jfrog rt bce $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             /jfrog rt bag $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             /jfrog rt bp $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
