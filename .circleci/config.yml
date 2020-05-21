@@ -2,8 +2,10 @@ version: 2
 jobs:
   build:
     docker:
-      - image: minepicco/cc-build-image:1.0
-
+      - image: minepicco/cc-build-image:latest
+    environment:
+      repo: "docker-local"
+      
     steps:
       - checkout
       - setup_remote_docker
@@ -11,8 +13,9 @@ jobs:
       - run:
           name: Build Image
           command: |
+            echo $addr"    artifactory.nohara" >> /etc/hosts
             echo $CIRCLE_PROJECT_REPONAME
-            docker build --tag "docker."$jfqdn"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM .
+            docker build --tag "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM .
 
       #- run:
       #    name: Login and Publish
@@ -28,8 +31,13 @@ jobs:
       - run:
           name: JFrogCLI config
           command: |
-            /jfrog rt config --user=$user --password=$password --url="https://"$jfqdn"/artifactory" $jid
+            /jfrog rt config --user=$juser --password=$jpass --url="https://artifactory.nohara/artifactory" $jid
             /jfrog rt ping
+      - run:
+          name: auth and push
+          command: |
+            docker login http://artifactory.nohara -u $juser -p jpass
+            docker push "artifactory.nohara/"$repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM
       - run:
           name: JFrogCLI artifact publish
           command: |
