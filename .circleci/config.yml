@@ -7,8 +7,8 @@ jobs:
   build:
     executor: machine
     environment:
-      dev-repo: "docker-local"
-      prod-repo: "docker-prod"
+      dev_repo: "docker-local"
+      prod_repo: "docker-prod"
       imagename: "artifactory.nohara/docker-local"
       
     steps:
@@ -40,12 +40,12 @@ jobs:
       - run:
           name: JFrogCLI image push and scan
           command: |
-            ./jfrog rt docker-push $imagename"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM $dev-repo --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
+            ./jfrog rt docker-push $imagename"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM $dev_repo --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
             ./jfrog rt bce $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             ./jfrog rt bag $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             ./jfrog rt bp $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             ./jfrog rt bs $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
-            ./jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $prod-repo
+            ./jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $prod_repo
 
 #      - run:
 #          name: auth and push
