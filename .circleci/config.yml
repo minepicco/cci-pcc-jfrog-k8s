@@ -11,7 +11,7 @@ workflows:
 
 jobs:
   build_scan:
-    executor: machine
+    machine: ture
     environment:
       dev_repo: "docker-local"
       prod_repo: "docker-prod"
@@ -66,9 +66,11 @@ jobs:
             ./jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $prod_repo
 
   deploy:
-    executor: machine
+    docker:
+      - image: minepicco/cci-build-image:latest
     steps:
       - checkout
+      - setup_remote_docker
 
       - run:
           name: Prepare Environment -- Install gcloud CLI
