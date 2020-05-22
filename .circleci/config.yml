@@ -1,11 +1,11 @@
 version: 2.1
 
-executors:
-  vms:
-    machine
-  dep:
-    docker:
-      - image: minepicco/cci-build-image:latest
+#executors:
+#  vms:
+#    machine
+#  dep:
+#    docker:
+#      - image: minepicco/cci-build-image:latest
 
 workflows:
 
@@ -18,7 +18,9 @@ workflows:
 
 jobs:
   build_scan:
-    exector: vms
+    exector: 
+      machine:
+        enabled: true
       
     environment:
       dev_repo: "docker-local"
