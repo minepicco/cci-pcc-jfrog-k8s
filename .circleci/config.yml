@@ -1,4 +1,11 @@
-version: 2
+version: 2.1
+
+executors:
+  vms:
+    machine: true
+  dep:
+    docker:
+      - image: minepicco/cci-build-image:latest
 
 workflows:
 
@@ -11,7 +18,8 @@ workflows:
 
 jobs:
   build_scan:
-    machine: ture
+    exector: vms
+      
     environment:
       dev_repo: "docker-local"
       prod_repo: "docker-prod"
@@ -68,6 +76,7 @@ jobs:
   deploy:
     docker:
       - image: minepicco/cci-build-image:latest
+      
     steps:
       - checkout
       - setup_remote_docker
