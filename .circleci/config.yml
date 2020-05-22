@@ -9,14 +9,6 @@ workflows:
           requires:
             - build_scan
 
-  nightly-build:
-    triggers:
-      - schedule:
-          cron: "0 8 * * *"
-          filters:
-            branches:
-              only: master
-
 jobs:
   build_scan:
     executor: machine
