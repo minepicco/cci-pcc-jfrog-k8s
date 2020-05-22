@@ -109,8 +109,8 @@ jobs:
       - run:
           name: test
           command: |
-            kubectl run --restart=Never $CIRCLE_BUILD_NUM --image=ubuntu
-            kubectl get pods -n nohara -o wide
+            kubectl run --restart=Never $CIRCLE_BUILD_NUM --image=34.66.44.144/docker-local/cci-jfrog-k8s:42
+            kubectl get pods -o wide
 
 #            gcloud config configurations activate $account
 #      - run:
