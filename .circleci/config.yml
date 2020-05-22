@@ -18,12 +18,8 @@ workflows:
 
 jobs:
   build_scan:
-    executor: 
-      machine:
-        name: ubuntu
-        tag: latest
-#        enabled: true
-      
+    machine: true
+    
     environment:
       dev_repo: "docker-local"
       prod_repo: "docker-prod"
