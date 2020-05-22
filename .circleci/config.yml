@@ -1,7 +1,15 @@
 version: 2
 
+workflows:
+  build-deploy:
+    jobs:
+      - build_scan
+      - deploy:
+        requires:
+          - build_scan
+
 jobs:
-  build:
+  build_scan:
     executor: machine
     environment:
       dev_repo: "docker-local"
@@ -25,14 +33,6 @@ jobs:
             sudo cat /etc/hosts > hosts && echo $addr" artifactory.nohara" >> hosts
             sudo mv hosts /etc/
             sudo service docker restart
-            
-      - run:
-          name: Prepare Environment -- Install gcloud CLI
-          command: |
-            echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-            sudo apt-get install -y apt-transport-https ca-certificates gnupg
-            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-            sudo apt-get update && sudo apt-get install -y google-cloud-sdk
             
       - run:
           name: Prepare Environment -- Install kubectl
@@ -63,6 +63,20 @@ jobs:
           name: JFrogCLI promote image to production
           command: |
             ./jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $prod_repo
+
+  deploy:
+    executor: machine
+    steps:
+      - checkout
+
+      - run:
+          name: Prepare Environment -- Install gcloud CLI
+          command: |
+            echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+            sudo apt-get install -y apt-transport-https ca-certificates gnupg
+            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+            sudo apt-get update && sudo apt-get install -y google-cloud-sdk
+            
       - run:
           name: Configure gcloud cli
           command: |
@@ -73,7 +87,6 @@ jobs:
 #            gcloud config set project $project
 #            gcloud config set project my_project $project
 #            gcloud config set compute/region $region
-
 
       - run:
           name: test
