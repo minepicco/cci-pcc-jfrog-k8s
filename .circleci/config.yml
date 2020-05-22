@@ -2,7 +2,7 @@ version: 2.1
 
 executors:
   vms:
-    machine: true
+    machine
   dep:
     docker:
       - image: minepicco/cci-build-image:latest
