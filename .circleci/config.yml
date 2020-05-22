@@ -20,7 +20,9 @@ jobs:
   build_scan:
     executor: 
       machine:
-        enabled: true
+        name: ubuntu
+        tag: latest
+#        enabled: true
       
     environment:
       dev_repo: "docker-local"
