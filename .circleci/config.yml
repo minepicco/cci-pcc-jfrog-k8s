@@ -5,7 +5,7 @@ executors:
     machine: true
   dep:
     docker:
-      - image: minepicco/cci-build-image:latest
+      - image: minepicco/cc-build-image:latest
 
 workflows:
 
@@ -43,13 +43,6 @@ jobs:
             sudo cat /etc/hosts > hosts && echo $addr" artifactory.nohara" >> hosts
             sudo mv hosts /etc/
             sudo service docker restart
-            
-      - run:
-          name: Prepare Environment -- Install kubectl
-          command: |
-            curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-            chmod +x ./kubectl
-            sudo mv ./kubectl /usr/local/bin/kubectl
                      
       - run:
           name: Build Image
@@ -75,27 +68,39 @@ jobs:
             ./jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $prod_repo
 
   deploy:
-    docker:
-      - image: minepicco/cc-build-image:latest
+    executor: dep
+#    docker:
+#      - image: minepicco/cc-build-image:latest
+    environment:
+      dev_repo: "docker-local"
+      prod_repo: "docker-prod"
+      imagename: "artifactory.nohara/docker-local"
       
     steps:
       - checkout
       - setup_remote_docker
 
-      - run:
-          name: Prepare Environment -- Install gcloud CLI
-          command: |
-            echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-            sudo apt-get install -y apt-transport-https ca-certificates gnupg
-            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-            sudo apt-get update && sudo apt-get install -y google-cloud-sdk
+#      - run:
+#          name: Prepare Environment -- Install gcloud CLI
+#          command: |
+#            echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+#            apt-get install -y apt-transport-https ca-certificates gnupg
+#            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+#            apt-get update && apt-get install -y google-cloud-sdk
+            
+#       - run:
+#          name: Prepare Environment -- Install kubectl
+#          command: |
+#            curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+#            chmod +x ./kubectl
+#            sudo mv ./kubectl /usr/local/bin/kubectl
             
       - run:
           name: Configure gcloud cli
           command: |
             echo $key>key.json
             gcloud auth activate-service-account --key-file=key.json
-            sudo gcloud beta container clusters get-credentials $cluster --region $region --project $project
+            gcloud beta container clusters get-credentials $cluster --region $region --project $project
 
 #            gcloud config set project $project
 #            gcloud config set project my_project $project
@@ -104,8 +109,8 @@ jobs:
       - run:
           name: test
           command: |
-            sudo kubectl run --restart=Never $CIRCLE_BUILD_NUM --image= 
-            sudo kubectl get pods -n nohara -o wide
+            kubectl run --restart=Never $CIRCLE_BUILD_NUM --image=ubuntu
+            kubectl get pods -n nohara -o wide
 
 #            gcloud config configurations activate $account
 #      - run:
