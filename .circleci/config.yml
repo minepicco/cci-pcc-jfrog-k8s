@@ -72,9 +72,9 @@ jobs:
             ./jfrog rt bp $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             ./jfrog rt bs $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
       - run:
-          name: JFrogCLI promote image to production
+          name: Sjack Notification
           command: |
-            ./jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $prod_repo
+            curl -X POST -d 'payload={"attachments": [{"text": "承認依頼があります！'$ap_url'"}]}' $wh_url
 
   deploy:
     executor: dep
@@ -86,6 +86,12 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+
+      - run:
+          name: JFrogCLI promote image to production
+          command: |
+            /jfrog rt config --user=$juser --password=$jpass --url="http://artifactory.nohara/artifactory" $jid
+            /jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $prod_repo
 
       - run:
           name: Configure gcloud cli
