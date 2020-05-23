@@ -1,4 +1,4 @@
-From nginx:1.15
+From nginx:1.17
 RUN apt-get update
 COPY index.html /usr/share/nginx/html/
 
