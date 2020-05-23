@@ -101,11 +101,14 @@ jobs:
             gcloud beta container clusters get-credentials $cluster --region $region --project $project
 
       - run:
-          name: test
+          name: deployment
           command: |
             deploy_image=$addr"/"$prod_repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_PREVIOUS_BUILD_NUM
-            echo `cat web.yaml` > web2.yaml
+            echo "      - image: "$deploy_image >> web.yaml
+            echo "        name: web" >> web.yaml
+            echo "        ports:" >> web.yaml
+            echo "        - containerPort: 80" >> web.yaml
+            echo "          name: web" >> web.yaml
             cat web.yaml
-            cat web2.yaml
             kubectl apply -f web.yaml
             kubectl get pods -o wide
