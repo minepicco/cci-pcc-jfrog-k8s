@@ -91,7 +91,7 @@ jobs:
           name: JFrogCLI promote image to production
           command: |
             /jfrog rt config --user=$juser --password=$jpass --url="http://"$addr"/artifactory" $jid
-            /jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM $prod_repo
+            /jfrog rt bpr $CIRCLE_PROJECT_REPONAME $CIRCLE_PREVIOUS_BUILD_NUM $prod_repo
 
       - run:
           name: Configure gcloud cli
@@ -103,7 +103,7 @@ jobs:
       - run:
           name: test
           command: |
-            deploy_image=$addr"/"$prod_repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM
+            deploy_image=$addr"/"$prod_repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_PREVIOUS_BUILD_NUM
             echo `cat web.yaml` > web2.yaml
             cat web.yaml
             cat web2.yaml
