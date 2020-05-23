@@ -11,3 +11,4 @@ COPY index.html /usr/share/nginx/html/
 #RUN pip install awscli
 #RUN wget -qO- https://get.docker.com/ | sh
 #RUN curl -fL https://getcli.jfrog.io | sh
+
