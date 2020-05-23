@@ -28,7 +28,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: $deploy_image
+      - image: {{ $deploy_image }}
         name: web
         ports:
         - containerPort: 80
