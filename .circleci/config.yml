@@ -103,9 +103,9 @@ jobs:
       - run:
           name: test
           command: |
-            dep_image=$addr"/"$prod_repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM
-            echo web.yaml > web2.yaml
-            cat web,yaml
+            deploy_image=$addr"/"$prod_repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM
+            echo `cat web.yaml` > web2.yaml
+            cat web.yaml
             cat web2.yaml
             kubectl apply -f web.yaml
             kubectl get pods -o wide
