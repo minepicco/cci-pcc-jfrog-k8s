@@ -112,3 +112,4 @@ jobs:
             cat web.yaml
             kubectl apply -f web.yaml
             kubectl get pods -o wide
+
