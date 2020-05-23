@@ -1,6 +1,8 @@
-#From nginx:latest
+From nginx:1.15
+RUN apt-get update
+COPY index.html /usr/share/nginx/html/
+
 #RUN apt-get update && apt-get install -y curl
-From wordpress:latest
 #From ubuntu:20.04
 #RUN apt-get update && apt install -y python wget curl jq nmap 
 #RUN apt-get install -y build-essential gcc libreadline-dev zlib1g-dev openjdk-8-jdk
