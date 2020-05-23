@@ -16,9 +16,13 @@ workflows:
           type: approval
           requires:
             - build_scan
+          branches:
+              only: master
       - deploy:
           requires:
             - hold
+          branches:
+              only: master
 
 jobs:
   build_scan:
