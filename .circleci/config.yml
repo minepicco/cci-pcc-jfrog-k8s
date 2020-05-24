@@ -1,9 +1,9 @@
 version: 2.1
 
 executors:
-  vms:
+  builder:
     machine: true
-  dep:
+  deployer:
     docker:
       - image: minepicco/cc-build-image:latest
 
@@ -28,11 +28,10 @@ workflows:
 
 jobs:
   build_scan:
-    executor: vms
+    executor: builder
     
     environment:
       dev_repo: "docker-local"
-      prod_repo: "docker-prod"
       imagename: "artifactory.nohara/docker-local"
       
     steps:
@@ -41,7 +40,7 @@ jobs:
       - run:
           name: Prepare Environment -- Install JFrog CLI
           command: |
-            sudo apt-get update && sudo apt-get install -y python wget curl jq
+            sudo apt-get update && sudo apt-get install -y curl
             curl -fL https://getcli.jfrog.io | sh
 
       - run:
@@ -60,12 +59,9 @@ jobs:
             docker build --tag $imagename"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM .
 
       - run:
-          name: JFrogCLI config
+          name: JFrogCLI config, image push and scan
           command: |
             ./jfrog rt config --user=$juser --password=$jpass --url="http://artifactory.nohara/artifactory" $jid
-      - run:
-          name: JFrogCLI image push and scan
-          command: |
             ./jfrog rt docker-push $imagename"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM $dev_repo --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
             ./jfrog rt bce $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
             ./jfrog rt bag $CIRCLE_PROJECT_REPONAME $CIRCLE_BUILD_NUM
@@ -74,12 +70,11 @@ jobs:
       - run:
           name: Sjack Notification
           command: |
-            curl -X POST -d 'payload={"attachments": [{"text": "承認依頼があります！'$ap_url'"}]}' $wh_url
+            curl -X POST -d 'payload={"attachments": [{"text": "デプロイの承認依頼があります！'$CIRCLE_BUILD_URL'"}]}' $wh_url
 
   deploy:
-    executor: dep
+    executor: deployer
     environment:
-      dev_repo: "docker-local"
       prod_repo: "docker-prod"
       imagename: "artifactory.nohara/docker-prod"
       
@@ -104,12 +99,7 @@ jobs:
           name: deployment
           command: |
             deploy_image=$addr"/"$prod_repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_PREVIOUS_BUILD_NUM
-            echo "      - image: "$deploy_image >> web.yaml
-            echo "        name: web" >> web.yaml
-            echo "        ports:" >> web.yaml
-            echo "        - containerPort: 80" >> web.yaml
-            echo "          name: web" >> web.yaml
-            cat web.yaml
-            kubectl apply -f web.yaml
+            echo "      - image: "$deploy_image >> web1.yaml
+            cat web2.yaml >> web1.yaml
+            kubectl apply -f web1.yaml
             kubectl get pods -o wide
-
