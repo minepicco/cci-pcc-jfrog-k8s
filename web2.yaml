@@ -2,3 +2,9 @@
         ports:
         - containerPort: 80
           name: web
+        livenessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          exec:
+            command:
+              - "true"
