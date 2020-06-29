@@ -66,7 +66,14 @@ jobs:
             docker stop web
 
       - run:
-          name: JFrogCLI config, image push and scan
+          name: Prisma Cloud Vuln/Compliance check
+          command: |
+            curl -k -u $tl_u:$tl_p --output twistcli $TL_URL"/api/v1/util/twistcli"
+            chmod +x twistcli
+            ./twistcli images scan --details --address $TL_URL -u $tl_u -p $tl_p --ci $imagename"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM 
+            
+      - run:
+          name: JFrogCLI config, image push and Licence policy scan
           command: |
             ./jfrog rt config --user=$juser --password=$jpass --url="http://artifactory.nohara/artifactory" $jid
             ./jfrog rt docker-push $imagename"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_BUILD_NUM $dev_repo --build-name=$CIRCLE_PROJECT_REPONAME --build-number=$CIRCLE_BUILD_NUM
@@ -77,7 +84,7 @@ jobs:
       - run:
           name: Slack Notification
           command: |
-            curl -X POST -d 'payload={"attachments": [{"text": "デプロイの承認依頼があります！'$CIRCLE_BUILD_URL'"}]}' $wh_url
+            curl -X POST -d 'payload={"attachments": [{"text": "ビルドのスキャンが完了しました！'$CIRCLE_BUILD_URL'"}]}' $wh_url
 
   deploy:
     executor: deployer
