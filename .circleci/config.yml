@@ -91,6 +91,7 @@ jobs:
     environment:
       prod_repo: "docker-prod"
       imagename: "artifactory.nohara/docker-prod"
+      comp: "low"
       
     steps:
       - checkout
@@ -108,12 +109,23 @@ jobs:
             echo $key>key.json
             gcloud auth activate-service-account --key-file=key.json
             gcloud beta container clusters get-credentials $cluster --region $region --project $project
-
+            
       - run:
-          name: deployment
+          name: Create Kubernetes Manifest
           command: |
             deploy_image=$addr"/"$prod_repo"/"$CIRCLE_PROJECT_REPONAME":"$CIRCLE_PREVIOUS_BUILD_NUM
             echo "      - image: "$deploy_image >> web1.yaml
             cat web2.yaml >> web1.yaml
+            
+      - run:
+          name: Prisma Cloud scan IaC
+          command: |
+            curl -k -u $tl_u:$tl_p --output twistcli $TL_URL"/api/v1/util/twistcli"
+            chmod +x twistcli
+            ./twistcli iac scan --publish --compliance-threshold $comp -u $tl_u -p $tl_p --address $TL_URL web1.yaml
+            
+      - run:
+          name: deployment
+          command: |
             kubectl apply -f web1.yaml
             kubectl get pods -o wide
