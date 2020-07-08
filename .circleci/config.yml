@@ -12,7 +12,7 @@ workflows:
   build-deploy:
     jobs:
       - build_scan:
-          context: webpage_deployment
+        context: webpage_deployment
       - hold:
           type: approval
           requires:
