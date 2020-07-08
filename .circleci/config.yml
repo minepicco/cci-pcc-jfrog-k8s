@@ -8,12 +8,13 @@ executors:
       - image: minepicco/cc-build-image:latest
 
 workflows:
+  version: 2.1
 
   build-deploy:
     jobs:
       - build_scan:
-        context: webpage_deployment
-      - hold:
+          context: webpage_deployment
+      - approve:
           type: approval
           requires:
             - build_scan
@@ -22,7 +23,7 @@ workflows:
               only: master
       - deploy:
           requires:
-            - hold
+            - approve
           context: webpage_deployment
           filters:
             branches:
